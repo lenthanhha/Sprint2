@@ -1,71 +1,78 @@
-package timsonhonhat;
 
+package sprint2;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
 
-public class Bai5 extends JFrame {
-    private JTextField txtA, txtB, txtResult;
-    private JButton btnFind, btnReset;
+public class Bai5 extends JFrame implements ActionListener {
+    private JTextField textField1, textField2, resultField;
+    private JButton calculateButton, clearButton;
 
     public Bai5() {
-        setTitle("Tìm số nhỏ nhất");
-        setSize(400, 200);
+        setTitle("Tính USCLN");
+        setSize(300, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(3, 2, 10, 10));
+        setLayout(new GridLayout(4, 2, 10, 10));
 
-        // Tạo các thành phần giao diện
-        JLabel lblA = new JLabel("Nhập số A:");
-        txtA = new JTextField();
+        // Ô nhập số thứ nhất
+        add(new JLabel("Nhập số thứ nhất:"));
+        textField1 = new JTextField();
+        add(textField1);
 
-        JLabel lblB = new JLabel("Nhập số B:");
-        txtB = new JTextField();
+        // Ô nhập số thứ hai
+        add(new JLabel("Nhập số thứ hai:"));
+        textField2 = new JTextField();
+        add(textField2);
 
-        JLabel lblResult = new JLabel("Số nhỏ nhất:");
-        txtResult = new JTextField();
-        txtResult.setEditable(false);
+        // Nút tính toán
+        calculateButton = new JButton("Tính USCLN");
+        calculateButton.addActionListener(this);
+        add(calculateButton);
 
-        btnFind = new JButton("Tìm số nhỏ nhất");
-        btnReset = new JButton("Reset");
+        // Nút xóa
+        clearButton = new JButton("Xóa");
+        clearButton.addActionListener(this);
+        add(clearButton);
 
-        // Xử lý sự kiện khi nhấn nút "Tìm số nhỏ nhất"
-        btnFind.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    double a = Double.parseDouble(txtA.getText().trim());
-                    double b = Double.parseDouble(txtB.getText().trim());
-
-                    double min = Math.min(a, b);
-                    txtResult.setText(String.valueOf(min));
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng nhập số hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        // Xử lý sự kiện khi nhấn nút "Reset"
-        btnReset.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                txtA.setText("");
-                txtB.setText("");
-                txtResult.setText("");
-            }
-        });
-
-        // Thêm các thành phần vào giao diện
-        add(lblA); add(txtA);
-        add(lblB); add(txtB);
-        add(lblResult); add(txtResult);
-        add(btnFind); add(btnReset);
+        // Ô hiển thị kết quả
+        resultField = new JTextField();
+        resultField.setEditable(false);
+        add(resultField);
 
         setVisible(true);
     }
 
-    // Hàm main để chạy chương trình
+    // Hàm tính USCLN bằng thuật toán Euclid
+    public static int findGCD(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return Math.abs(a);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            int num1 = Integer.parseInt(textField1.getText());
+            int num2 = Integer.parseInt(textField2.getText());
+
+            if (e.getSource() == calculateButton) {
+                int gcd = findGCD(num1, num2);
+                resultField.setText("USCLN: " + gcd);
+            } else if (e.getSource() == clearButton) {
+                textField1.setText("");
+                textField2.setText("");
+                resultField.setText("");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số nguyên hợp lệ!");
+        }
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Bai5());
+        new Bai5();
     }
 }
